@@ -1,0 +1,9 @@
+query GetBooksAndAuthors {
+  books {
+    title
+  }
+
+  authors {
+    name
+  }
+}

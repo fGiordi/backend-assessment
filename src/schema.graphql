@@ -1,0 +1,9 @@
+export type Book {
+  title: String
+  author: Author
+}
+
+export type Author {
+  name: String!
+  books: [Book]
+}
