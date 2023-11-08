@@ -2,20 +2,8 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
 // TODO this is dummy data for now
-const books = [
-  {
-    title: 'The Awakening',
-    author: {name: 'Kate Chopin'},
-  },
-  {
-    title: 'City of Glass',
-    author: {name: 'Paul Auster'},
-  },
-];
-
-const authors = [
-	{name: 'James Clear'}
-]
+const users = [];
+const tasks = [];
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -23,82 +11,103 @@ const authors = [
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-	type Author {
-		name: String
-		books: [Book]
+	type User {
+		id: ID
+		username: String
+		email: String
+		tasks: [Task]
 	}
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: Author
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
+	
+	type Task {
+		id: ID
+		title: String
+		description: String
+		completed: Boolean
+		user: User
+	}
+	
 	type Query {
-		books: [Book]
-		authors: [Author]
+		tasks: [Task]
 	}
 	type Query {
-		authors: [Author]
+		users: [User]
 	}
+	
 	type Mutation {
-		addBook(title: String, author: String): Book
-		updateBook(title: String, newTitle: String, author: String): Book
-    deleteBook(title: String, author: String): String
+		createTask(title: String, description: String, userId: ID): Task
+		registerUser(username: String, email: String): User
+		deleteTask(id: ID): String
+		updateTask(id: ID, title: String, description: String, completed: Boolean): Task
 	}
 `;
 
 // Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    books: () => books,
-		authors: () => authors,
+    tasks: () => tasks,
+    users: () => users,
   },
-	Mutation: {
-    addBook: (parent, args) => {
-      const { title, author } = args;
-      // Create a new book object and add it to the 'books' array
-      const newBook = {
+  Mutation: {
+    createTask: (parent, args) => {
+      const { title, description, userId } = args;
+      // Create a new task object and add it to the 'tasks' array
+      const newTask = {
+        id: String(tasks.length + 1),
         title,
-        author: { name: author },
+        description,
+        completed: false,
+        user: users.find((user) => user.id === userId),
       };
-      books.push(newBook);
-      return newBook;
+      tasks.push(newTask);
+      return newTask;
     },
-		updateBook: (parent, args) => {
-			const { title, newTitle, author } = args;
-			const bookIndex = books.findIndex((book) => book.title === title && book.author.name === author);
-			if (bookIndex === -1) {
-				throw new Error("Book not found");
-			}
-			const updatedBook = { ...books[bookIndex], title: newTitle };
-			books[bookIndex] = updatedBook;
-			return updatedBook;
-		},
-		deleteBook: (parent, args) => {
-			const { title, author } = args;
-			const bookIndex = books.findIndex((book) => book.title === title && book.author.name === author);
-			console.log('bookIndex')
-			if (bookIndex) {
-				const deletedBook = books[bookIndex];
-			books.splice(bookIndex, 1);
-			return books
-			} else {
-				throw new Error("Book not found");
-			}
-			
-		},
+    registerUser: (parent, args) => {
+			// TODO: email should be unique
+      const { username, email, password } = args;
+      // Create a new user object and add it to the 'users' array
+      const newUser = {
+        id: String(users.length + 1),
+        username,
+        email,
+        // password,
+        tasks: [],
+      };
+      users.push(newUser);
+      return newUser;
+    },
+		deleteTask: (parent, args) => {
+      const { id } = args;
+      const taskIndex = tasks.findIndex((task) => task.id === id);
+      if (taskIndex === -1) {
+        throw new Error("Task not found");
+      }
+      const deletedTask = tasks[taskIndex];
+      tasks.splice(taskIndex, 1);
+      return `Task with ID ${id} has been deleted.`;
+    },
+		updateTask: (parent, args) => {
+      const { id, title, description, completed } = args;
+      const taskIndex = tasks.findIndex((task) => task.id === id);
+      if (taskIndex === -1) {
+        throw new Error("Task not found");
+      }
+      const updatedTask = { ...tasks[taskIndex], title, description, completed };
+      tasks[taskIndex] = updatedTask;
+      return updatedTask;
+    },
   },
-	
+  User: {
+    tasks: (parent) => tasks.filter((task) => task.user.id === parent.id),
+  },
+  Task: {
+    user: (parent) => users.find((user) => user.id === parent.user.id),
+  },
 }
 
+users.push({ id: "1", username: "user1", email: "user1@example.com", password: "password1", tasks: [] });
+users.push({ id: "2", username: "user2", email: "user2@example.com", password: "password2", tasks: [] });
+tasks.push({ id: "1", title: "Task 1", description: "Description 1", completed: false, user: users[0] });
+tasks.push({ id: "2", title: "Task 2", description: "Description 2", completed: true, user: users[1] });
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
