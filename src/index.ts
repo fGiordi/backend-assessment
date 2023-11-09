@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
 import { createUser, findUsers } from './services/user.service';
+import { findTasks } from './services/task.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -53,7 +54,15 @@ const typeDefs = `#graphql
 // Resolvers define how to fetch the types defined in your schema.
 const resolvers = {
   Query: {
-    tasks: () => tasks,
+    tasks: async () => {
+      try {
+        const tasks = await findTasks();
+        return tasks;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch tasks from the database.');
+    }
+  },
     users: async () => {
         try {
           const users = await findUsers();
@@ -79,8 +88,8 @@ const resolvers = {
       return newTask;
     },
     registerUser: async (parent, args) => {
-			// TODO: email should be unique
       try {
+        // TODO to add relations
         const { username, email, password } = args;
         const newUser = await createUser({ username, email });
         return newUser;

@@ -1,8 +1,9 @@
 import { DataSource } from "typeorm"
 import User from "../entities/user.entity"
+import { Task } from "../entities/tasks.entity"
 
 export const AppDataSource = new DataSource({
-  entities: [User],
+  entities: [User, Task],
   synchronize: true,
   logging: false,
   "type": "postgres",
