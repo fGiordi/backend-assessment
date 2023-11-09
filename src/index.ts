@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
+import { findUsers } from './services/user.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -53,7 +54,15 @@ const typeDefs = `#graphql
 const resolvers = {
   Query: {
     tasks: () => tasks,
-    users: () => users,
+    users: async () => {
+        try {
+          const users = await findUsers();
+          return users;
+        } catch (error) {
+          console.error(error);
+          throw new Error('Failed to fetch users from the database.');
+      }
+    },
   },
   Mutation: {
     createTask: (parent, args) => {
