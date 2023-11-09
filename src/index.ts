@@ -2,7 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
-import { findUsers } from './services/user.service';
+import { createUser, findUsers } from './services/user.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -78,19 +78,16 @@ const resolvers = {
       tasks.push(newTask);
       return newTask;
     },
-    registerUser: (parent, args) => {
+    registerUser: async (parent, args) => {
 			// TODO: email should be unique
-      const { username, email, password } = args;
-      // Create a new user object and add it to the 'users' array
-      const newUser = {
-        id: String(users.length + 1),
-        username,
-        email,
-        // password,
-        tasks: [],
-      };
-      users.push(newUser);
-      return newUser;
+      try {
+        const { username, email, password } = args;
+        const newUser = await createUser({ username, email });
+        return newUser;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to register user.');
+      }
     },
 		deleteTask: (parent, args) => {
       const { id } = args;
@@ -141,6 +138,5 @@ startStandaloneServer(server, {
   listen: { port: 4000 },
 }).then((result) => {
 console.log(`🚀  Server ready at: ${result.url}`);
-
 })
 
