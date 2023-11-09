@@ -2,7 +2,7 @@ import { Entity, Column, Index,  } from 'typeorm';
 import Model from './model.entity';
 
 @Entity('users')
-export class User extends Model {
+class User extends Model {
   @Column()
   username: string;
 
@@ -13,3 +13,5 @@ export class User extends Model {
   email: string;
   
 }
+
+export default User
