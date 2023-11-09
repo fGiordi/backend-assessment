@@ -1,9 +1,13 @@
 import { ApolloServer } from '@apollo/server';
+import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import { AppDataSource } from './db';
 
 // TODO this is dummy data for now
 const users = [];
 const tasks = [];
+
+AppDataSource.initialize()
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -11,11 +15,15 @@ const tasks = [];
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
+	input TaskFilterInput {
+    completed: Boolean
+  }
+
 	type User {
 		id: ID
 		username: String
 		email: String
-		tasks: [Task]
+		tasks(filter: TaskFilterInput): [Task]
 	}
 	
 	type Task {
@@ -120,8 +128,10 @@ const server = new ApolloServer({
 //  1. creates an Express app
 //  2. installs your ApolloServer instance as middleware
 //  3. prepares your app to handle incoming requests
-const { url } = await startStandaloneServer(server, {
+startStandaloneServer(server, {
   listen: { port: 4000 },
-});
+}).then((result) => {
+console.log(`🚀  Server ready at: ${result.url}`);
 
-console.log(`🚀  Server ready at: ${url}`);
+})
+
