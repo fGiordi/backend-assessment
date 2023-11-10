@@ -2,8 +2,8 @@ import { ApolloServer } from '@apollo/server';
 import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
-import { createUser, findUserById, findUsers, userRepository } from './services/user.service';
-import { createTask, findTasks, taskRepository } from './services/task.service';
+import { createUser, findUsers, userRepository } from './services/user.service';
+import { createTask, findTasks,  } from './services/task.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -55,9 +55,24 @@ const typeDefs = `#graphql
 // Resolvers define how to fetch the types defined in your schema.
 const resolvers = {
   Query: {
-    
-    tasks: async () => await taskRepository.find({ relations: ['user'] }),
-    users: async () => await userRepository.find({relations: ['tasks'],}),
+    tasks: async () => {
+      try {
+        const tasks = await findTasks();
+        return tasks;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch tasks from the database.');
+    }
+    },
+    users: async () => {
+      try {
+        const users = await findUsers();
+        return users;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch users from the database.');
+    }
+  },
   },
   Mutation: {
     createTask: async (parent, args) => {
