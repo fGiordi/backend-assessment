@@ -3,13 +3,13 @@ import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
 import { createUser, findUsers, userRepository } from './services/user.service';
-import { createTask, findTasks,  } from './services/task.service';
+import { createTask, findTasks, deleteTask } from './services/task.service';
 
 // TODO this is dummy data for now
 const users = [];
 const tasks = [];
 
-AppDataSource.initialize()
+AppDataSource.initialize() 
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -47,7 +47,7 @@ const typeDefs = `#graphql
 	type Mutation {
 		createTask(title: String, description: String, userId: ID): Task
 		registerUser(username: String, email: String): User
-		deleteTask(id: ID): String
+		deleteTask(id: ID, userId: ID): String
 		updateTask(id: ID, title: String, description: String, completed: Boolean): Task
 	}
 `;
@@ -87,7 +87,6 @@ const resolvers = {
     },
     registerUser: async (parent, args) => {
       try {
-        // TODO to add relations
         const { username, email, password } = args;
         const newUser = await createUser({ username, email });
         return newUser;
@@ -96,15 +95,16 @@ const resolvers = {
         throw new Error('Failed to register user.');
       }
     },
-		deleteTask: (parent, args) => {
-      const { id } = args;
-      const taskIndex = tasks.findIndex((task) => task.id === id);
-      if (taskIndex === -1) {
-        throw new Error("Task not found");
-      }
-      const deletedTask = tasks[taskIndex];
-      tasks.splice(taskIndex, 1);
-      return `Task with ID ${id} has been deleted.`;
+		deleteTask: async (parent, args) => {
+        const { id, userId } = args;
+  
+        try {
+          const result = await deleteTask(id, userId);
+          return result;
+        } catch (error) {
+          console.error(error);
+          throw new Error('Failed to delete task.');
+        }
     },
 		updateTask: (parent, args) => {
       const { id, title, description, completed } = args;

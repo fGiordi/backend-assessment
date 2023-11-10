@@ -17,7 +17,29 @@ export const createTask = async (input: Partial<Task>, userId: string) => {
   }
   const data = await taskRepository.save(taskRepository.create({ ...input, user }));
 
-  console.log('created task', data)
-
 	return data
+};
+
+export const deleteTask = async (taskId: string, userId: string) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new Error(`User with ID ${userId} not found.`);
+  }
+
+  const task = await taskRepository.findOne({where: {id: taskId}, relations: ['user']})
+
+  if (!task) {
+    throw new Error(`Task with ID ${taskId} not found.`);
+  }
+
+  if (task.user.id != userId) {
+    throw new Error(`Task with ID ${taskId} does not belong to user with ID ${userId}.`);
+  }
+
+  await taskRepository.remove(task);
+
+  console.log(`Deleted task with ID ${taskId}`);
+
+  return `Task with ID ${taskId} has been deleted.`;
 };

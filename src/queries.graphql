@@ -69,3 +69,7 @@ mutation CreateTask{
   }
 }
 
+
+mutation DeleteTask {
+  deleteTask(id: "id", userId: "id")
+}

@@ -13,6 +13,5 @@ export const findUsers = async () => {
 
 export const findUserById = async (userId: string) => {
   const data = await userRepository.findOneBy({ id: userId });
-  console.log('found user data', data)
   return data
 };
