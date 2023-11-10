@@ -72,3 +72,18 @@ export const updateTask = async (taskId: string, userId: string, input: Partial<
 
   return updatedTask;
 };
+
+export const findTasksByStatus = async (userId: string, completed: boolean | undefined): Promise<Task[]> => {
+  const queryOptions: any = {
+    where: {
+      user: { id: userId },
+    },
+    relations: ['user']
+  };
+
+  if (completed != undefined) {
+    queryOptions.where.completed = completed;
+  }
+
+  return await taskRepository.find(queryOptions);
+};

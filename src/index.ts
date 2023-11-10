@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
 import { createUser, findUsers, userRepository } from './services/user.service';
-import { createTask, findTasks, deleteTask, updateTask } from './services/task.service';
+import { createTask, findTasks, deleteTask, updateTask, findTasksByStatus, taskRepository } from './services/task.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -39,8 +39,7 @@ const typeDefs = `#graphql
 	
 	type Query {
 		tasks: [Task]
-	}
-	type Query {
+    tasksByStatus(userId: ID!, completed: Boolean): [Task]
 		users: [User]
 	}
 	
@@ -71,6 +70,16 @@ const resolvers = {
       } catch (error) {
         console.error(error);
         throw new Error('Failed to fetch users from the database.');
+    }
+  },
+  tasksByStatus: async (parent, args) => {
+    const { userId, completed } = args;
+
+    if (completed != undefined) {
+      return await findTasksByStatus(userId, completed);
+    } else {
+      // If completed is not provided, use the existing logic for fetching all tasks
+      return await taskRepository.find({ where: { user: { id: userId } } });
     }
   },
   },

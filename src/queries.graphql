@@ -87,3 +87,17 @@ mutation UpdateTask {
     }
   }
 }
+
+query FindTasksByStatus {
+  findTasksByStatus(userId: "id", completed: true) {
+    id
+    title
+    description
+    completed
+    user {
+      id
+      username
+      email
+    }
+  }
+}
