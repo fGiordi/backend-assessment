@@ -73,3 +73,17 @@ mutation CreateTask{
 mutation DeleteTask {
   deleteTask(id: "id", userId: "id")
 }
+
+mutation UpdateTask {
+  updateTask(id: "id", userId: "id", title: "New Title", description: "New Description", completed: true) {
+    id
+    title
+    description
+    completed
+    user {
+      id
+      username
+      email
+    }
+  }
+}

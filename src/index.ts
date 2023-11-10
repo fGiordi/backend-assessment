@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
 import { createUser, findUsers, userRepository } from './services/user.service';
-import { createTask, findTasks, deleteTask } from './services/task.service';
+import { createTask, findTasks, deleteTask, updateTask } from './services/task.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -48,7 +48,7 @@ const typeDefs = `#graphql
 		createTask(title: String, description: String, userId: ID): Task
 		registerUser(username: String, email: String): User
 		deleteTask(id: ID, userId: ID): String
-		updateTask(id: ID, title: String, description: String, completed: Boolean): Task
+		updateTask(id: ID, userId: ID, title: String, description: String, completed: Boolean): Task
 	}
 `;
 
@@ -106,15 +106,17 @@ const resolvers = {
           throw new Error('Failed to delete task.');
         }
     },
-		updateTask: (parent, args) => {
-      const { id, title, description, completed } = args;
-      const taskIndex = tasks.findIndex((task) => task.id === id);
-      if (taskIndex === -1) {
-        throw new Error("Task not found");
+		updateTask: async (parent, args) => {
+      const { id, userId, title, description, completed } = args;
+
+      try {
+        const input = { title, description, completed };
+        const result = await updateTask(id, userId, input);
+        return result;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to update task.');
       }
-      const updatedTask = { ...tasks[taskIndex], title, description, completed };
-      tasks[taskIndex] = updatedTask;
-      return updatedTask;
     },
     },
     

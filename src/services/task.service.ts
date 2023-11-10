@@ -43,3 +43,32 @@ export const deleteTask = async (taskId: string, userId: string) => {
 
   return `Task with ID ${taskId} has been deleted.`;
 };
+
+export const updateTask = async (taskId: string, userId: string, input: Partial<Task>) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new Error(`User with ID ${userId} not found.`);
+  }
+
+  const task = await taskRepository.findOne({where: {id: taskId}, relations: ['user']} );
+
+  if (!task) {
+    throw new Error(`Task with ID ${taskId} not found.`);
+  }
+
+  if (task.user.id != userId) {
+    throw new Error(`Task with ID ${taskId} does not belong to user with ID ${userId}.`);
+  }
+
+  // Update task properties
+  task.title = input.title || task.title;
+  task.description = input.description || task.description;
+  task.completed = input.completed != undefined ? input.completed : task.completed;
+
+  const updatedTask = await taskRepository.save(task);
+
+  console.log(`Updated task with ID ${taskId}`);
+
+  return updatedTask;
+};
