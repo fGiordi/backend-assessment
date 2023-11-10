@@ -104,7 +104,16 @@ const resolvers = {
     },
     
   User: {
-    tasks: (parent) => tasks.filter((task) => task.user.id === parent.id),
+    tasks: async (parent) => {
+      // If tasks are eagerly loaded, return them directly
+      if (parent.tasks) {
+        return parent.tasks;
+      }
+      
+      // If tasks are not eagerly loaded, fetch them from the repository
+      const user = await userRepository.findOne(parent.id);
+      return user ? user.tasks : [];
+    },
   },
   Task: {
     user: async (parent) => {
