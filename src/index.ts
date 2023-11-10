@@ -2,8 +2,8 @@ import { ApolloServer } from '@apollo/server';
 import 'reflect-metadata';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
-import { createUser, findUsers } from './services/user.service';
-import { findTasks } from './services/task.service';
+import { createUser, findUserById, findUsers, userRepository } from './services/user.service';
+import { createTask, findTasks, taskRepository } from './services/task.service';
 
 // TODO this is dummy data for now
 const users = [];
@@ -34,6 +34,7 @@ const typeDefs = `#graphql
 		description: String
 		completed: Boolean
 		user: User
+    userId: String
 	}
 	
 	type Query {
@@ -54,38 +55,20 @@ const typeDefs = `#graphql
 // Resolvers define how to fetch the types defined in your schema.
 const resolvers = {
   Query: {
-    tasks: async () => {
-      try {
-        const tasks = await findTasks();
-        return tasks;
-      } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch tasks from the database.');
-    }
-  },
-    users: async () => {
-        try {
-          const users = await findUsers();
-          return users;
-        } catch (error) {
-          console.error(error);
-          throw new Error('Failed to fetch users from the database.');
-      }
-    },
+    
+    tasks: async () => await taskRepository.find({ relations: ['user'] }),
+    users: async () => await userRepository.find({relations: ['tasks'],}),
   },
   Mutation: {
-    createTask: (parent, args) => {
-      const { title, description, userId } = args;
-      // Create a new task object and add it to the 'tasks' array
-      const newTask = {
-        id: String(tasks.length + 1),
-        title,
-        description,
-        completed: false,
-        user: users.find((user) => user.id === userId),
-      };
-      tasks.push(newTask);
-      return newTask;
+    createTask: async (parent, args) => {
+      try {
+        const { title, description, userId } = args;
+        const newTask = await createTask({ title, description }, userId);
+        return newTask;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to create task.');
+      }
     },
     registerUser: async (parent, args) => {
       try {
@@ -118,12 +101,19 @@ const resolvers = {
       tasks[taskIndex] = updatedTask;
       return updatedTask;
     },
-  },
+    },
+    
   User: {
     tasks: (parent) => tasks.filter((task) => task.user.id === parent.id),
   },
   Task: {
-    user: (parent) => users.find((user) => user.id === parent.user.id),
+    user: async (parent) => {
+      // If the user is not loaded automatically, fetch it by ID
+      if (!parent.user) {
+        return await userRepository.findOne(parent.userId);
+      }
+      return parent.user;
+    },
   },
 }
 

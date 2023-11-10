@@ -1,12 +1,18 @@
 import { AppDataSource } from "../db";
 import User from "../entities/user.entity";
 
-const userRepository = AppDataSource.getRepository(User)
+export const userRepository = AppDataSource.getRepository(User)
 
 export const createUser = async (input: Partial<User>) => {
   return await userRepository.save(userRepository.create(input));
 };
 
 export const findUsers = async () => {
-  return await userRepository.find()
+  return await userRepository.find({relations: ['tasks'],})
+};
+
+export const findUserById = async (userId: string) => {
+  const data = await userRepository.findOneBy({ id: userId });
+  console.log('found user data', data)
+  return data
 };

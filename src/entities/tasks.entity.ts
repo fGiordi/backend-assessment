@@ -15,7 +15,7 @@ export class Task extends Model {
   })
   completed: boolean;
 
-  @ManyToOne(() => User, (user) => user.tasks)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.tasks, {nullable: false})
+  @JoinColumn({name: 'userId'})
   user: User;
 }

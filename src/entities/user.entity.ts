@@ -1,4 +1,4 @@
-import { Entity, Column, Index, OneToMany,  } from 'typeorm';
+import { Entity, Column, Index, OneToMany, JoinColumn,  } from 'typeorm';
 import Model from './model.entity';
 import { Task } from './tasks.entity';
 
@@ -12,7 +12,7 @@ class User extends Model {
     unique: true,
   })
   email: string;
-  @OneToMany(() => Task, (task) => task.user)
+  @OneToMany(() => Task, (task) => task.user, { eager: true , nullable: false})
   tasks: Task[];
 }
 
