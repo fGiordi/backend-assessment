@@ -1,5 +1,5 @@
 import { AppDataSource } from "../db";
-import { Task } from "../entities/tasks.entity";
+import  Task  from "../entities/tasks.entity";
 import User from "../entities/user.entity";
 import { findUserById } from "./user.service";
 
