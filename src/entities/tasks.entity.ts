@@ -3,7 +3,7 @@ import Model from './model.entity';
 import User  from './user.entity';
 
 @Entity('tasks')
-export class Task extends Model {
+class Task extends Model {
   @Column()
   title: string;
 
@@ -19,3 +19,5 @@ export class Task extends Model {
   @JoinColumn({name: 'userId'})
   user: User;
 }
+
+export default Task

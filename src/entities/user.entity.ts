@@ -1,6 +1,6 @@
 import { Entity, Column, Index, OneToMany, JoinColumn,  } from 'typeorm';
 import Model from './model.entity';
-import { Task } from './tasks.entity';
+import Task  from './tasks.entity';
 
 @Entity('users')
 class User extends Model {

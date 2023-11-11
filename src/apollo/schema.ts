@@ -8,6 +8,10 @@ const typeDefs = `#graphql
     completed: Boolean
   }
 
+	type Query {
+    hello: String
+  }
+
 	type User {
 		id: ID
 		username: String
