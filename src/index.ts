@@ -13,11 +13,11 @@ AppDataSource.initialize()
 //  1. creates an Express app
 //  2. installs your ApolloServer instance as middleware
 //  3. prepares your app to handle incoming requests
-startStandaloneServer(server, {
-  listen: { port: PORT},
-}).then((result) => {
-console.log(`🚀  Server ready at: ${result.url}`);
-})
+// startStandaloneServer(server, {
+//   listen: { port: PORT},
+// }).then((result) => {
+// console.log(`🚀  Server ready at: ${result.url}`);
+// })
 
 
 // This final export is important!
