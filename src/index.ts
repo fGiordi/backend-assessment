@@ -1,7 +1,6 @@
 require('dotenv').config({});
 
 import 'reflect-metadata';
-import { startStandaloneServer } from '@apollo/server/standalone';
 import { AppDataSource } from './db';
 import { server } from './apollo';
 import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
