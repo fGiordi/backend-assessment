@@ -63,6 +63,17 @@ Testing Tasks Query using http client
 }
 ```
 
+## Example Request 3
+- Register User
+
+Testing Tasks Query using http client
+- create a post request to https://p3xyeb9kt4.execute-api.eu-north-1.amazonaws.com/prod
+- Below is the JSON body
+```
+{
+  "query": "mutation RegisterUser { registerUser(username: \"James Brown\", email: \"jamesbrown@gmail.com\") { id, username, email } }"
+}
+```
 
 ## Authentication 
 Currently, the API doesn't use JWT for authentication. Make sure to handle user authentication and authorization on the front end as needed.
