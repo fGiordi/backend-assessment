@@ -45,8 +45,8 @@ To run tests, you can just run
 ```
 
 ## What am I testing?
-hello world query that is deployed to the graphql server
-testing the structure of the data coming back from graph QL, to ensure the format is as expected
+- hello world query that is deployed to the graphql server
+- testing the structure of the data coming back from graph QL, to ensure the format is as expected
 
 
 
