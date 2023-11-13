@@ -1,21 +1,15 @@
 "use strict";
-const { ApolloServer, gql } = require("apollo-server-lambda");
-const typeDefs = gql `
-  type Query {
-    hello: String
-  }
-`;
-const resolvers = {
-    Query: {
-        hello: () => "Hello world!",
-    },
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+// import { server } from "./src/apollo";
+require("./src/index");
+const resolvers_1 = __importDefault(require("./src/apollo/resolvers"));
+const schema_1 = __importDefault(require("./src/apollo/schema"));
+const { ApolloServer, gql } = require("apollo-server-lambda");
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    // If you'd like to have GraphQL Playground and introspection enabled in production,
-    // the `playground` and `introspection` options must be set explicitly to `true`.
-    playground: true,
-    introspection: true,
+    typeDefs: schema_1.default,
+    resolvers: resolvers_1.default,
 });
 exports.handler = server.createHandler();

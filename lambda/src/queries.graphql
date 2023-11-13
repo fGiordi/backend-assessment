@@ -1,0 +1,103 @@
+# example fetch
+query ExampleQuery {
+  tasks {
+    id
+  }
+  users {
+    id,
+    username, 
+    email
+  }
+}
+# register user
+mutation RegisterUser {
+  registerUser(username: "john_doe", email: "john@example.com", password: "securepassword") {
+    id
+    username
+    email
+    tasks {
+      id
+      title
+      description
+      completed
+    }
+  }
+}
+
+mutation RegisterUser {
+  registerUser(username: "Giordi Fungula", email: "jodi.fungula@gmail.com") {
+    id
+    username
+    email
+  }
+}
+
+# Create Task
+mutation CreateTask($title: String!, $description: String!, $userId: ID!) {
+  createTask(title: $title, description: $description, userId: $userId) {
+    id
+    title
+    description
+    completed
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+
+
+mutation RegisterUser {
+  registerUser(username: "James Brown", email: "jamesbrown@gmail.com") {
+    id
+    username
+    email
+  }
+}
+
+mutation CreateTask{
+  createTask(title: "Update", description: "Description of the task", userId: "1") {
+    id
+    title
+    description
+    completed,
+    user {
+      username,
+      id
+    }
+  }
+}
+
+
+mutation DeleteTask {
+  deleteTask(id: "id", userId: "id")
+}
+
+mutation UpdateTask {
+  updateTask(id: "id", userId: "id", title: "New Title", description: "New Description", completed: true) {
+    id
+    title
+    description
+    completed
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+
+query FindTasksByStatus {
+  findTasksByStatus(userId: "id", completed: true) {
+    id
+    title
+    description
+    completed
+    user {
+      id
+      username
+      email
+    }
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "name": "graph-api-cdk",
+  "name": "graphql-cdk",
   "version": "0.1.0",
   "bin": {
-    "graph-api-cdk": "bin/graph-api-cdk.js"
+    "graphql-cdk": "bin/graphql-cdk.js"
   },
   "scripts": {
     "build": "tsc",
