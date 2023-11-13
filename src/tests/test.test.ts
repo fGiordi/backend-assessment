@@ -54,7 +54,6 @@ describe('GraphQL Queries', function () {
       // Check if the response contains the expected structure
       expect(response.data).to.have.property('data')
 
-      console.log('response.data', response.data)
 
 
     } catch (error) {

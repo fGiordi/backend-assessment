@@ -113,6 +113,9 @@ Testing Filter query using http client
 
 ```
 
+## [Example of to make the query from the front end](./FrontEndQueryExample.md)
+
+
 ## Authentication 
 Currently, the API doesn't use JWT for authentication. Make sure to handle user authentication and authorization on the front end as needed.
 

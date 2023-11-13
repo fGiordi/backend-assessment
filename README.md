@@ -30,6 +30,25 @@ Typescript and Javascript: Type safety is being utilized.
 - Use your preferred HTTP client tool (e.g., Postman, Insomnia) or integrate the queries and mutations directly into your front-end application.
 - Send POST requests to the GraphQL API endpoint https://p3xyeb9kt4.execute-api.eu-north-1.amazonaws.com/prod.
 
+## How to run locally (optional)
+run yarn inside once the repo is cloned
+ENV variables to note are  [found here](./example.env)
+run yarn dev to start the local server
+Once live you can test the apollo server port and start to play around with the graphql
+the mutations and queries are found in the [Front End API Documentation and Guide](./FrontendDocumentation.md)
+
+
+## Testing
+To run tests, you can just run 
+```
+  npm run test
+```
+
+## What am I testing?
+hello world query that is deployed to the graphql server
+testing the structure of the data coming back from graph QL, to ensure the format is as expected
+
+
 
 ## NOTE:
 **ALL Requests to the Graph QL API should be a POST REQUEST, even the GET QUERIES**
