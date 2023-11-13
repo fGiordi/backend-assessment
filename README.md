@@ -18,12 +18,23 @@ PostgreSQL Database: The API uses a PostgreSQL database to persist user and task
 
 TypeORM: TypeORM is employed for interacting with the PostgreSQL database, providing a powerful Object-Relational Mapping (ORM) solution.
 
+GraphQL: API is build ontop of Graphql and apollo to query data.
+
+Typescript and Javascript: Type safety is being utilized.
+
+
 ## Queries and Mutations
 - All Queries and mutations can be found in the [Front End API Documentation and Guide](./FrontendDocumentation.md)
 
 ## Getting Started
 - Use your preferred HTTP client tool (e.g., Postman, Insomnia) or integrate the queries and mutations directly into your front-end application.
 - Send POST requests to the GraphQL API endpoint https://p3xyeb9kt4.execute-api.eu-north-1.amazonaws.com/prod.
+
+
+## NOTE:
+**ALL Requests to the Graph QL API should be a POST REQUEST, even the GET QUERIES**
+**Note, the Database is not fully optimised for 100% performance at this point. If you encounter an error when you make a request, please test that the server is still running by testing the hello query and then trying your request again., However all errors are being handled and sent to the user and logs for monitoring**
+**Errors are being handled accordingly**
 
 
 Happy coding!

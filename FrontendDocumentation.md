@@ -175,3 +175,5 @@ query FilterTasksByStatus($completed: Boolean!) {
 
 ## NOTE:
 **ALL Requests to the Graph QL API should be a POST REQUEST, even the GET QUERIES**
+**Note, the Database is not fully optimised for 100% performance at this point. If you encounter an error when you make a request, please test that the server is still running by testing the hello query and then trying your request again., However all errors are being handled and sent to the user and logs for monitoring**
+**Errors are being handled accordingly**
