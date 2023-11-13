@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import { DataSource } from "typeorm"
 import User from "../entities/user.entity"
 import Task  from "../entities/tasks.entity"
