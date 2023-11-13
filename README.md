@@ -55,6 +55,17 @@ To run tests, you can just run
 **Note, the Database is not fully optimised for 100% performance at this point. If you encounter an error when you make a request, please test that the server is still running by testing the hello query and then trying your request again., However all errors are being handled and sent to the user and logs for monitoring**
 **Errors are being handled accordingly**
 
+## What is the Hello World Query ?
+Testing hello Query using http client (Post man, thunderclient )
+- create a post request to https://p3xyeb9kt4.execute-api.eu-north-1.amazonaws.com/prod
+- Below is the JSON body
+```
+{
+  "query": "{hello}"
+}
+```
+
+
 
 Happy coding!
 
