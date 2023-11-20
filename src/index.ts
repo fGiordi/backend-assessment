@@ -1,13 +1,13 @@
 require('dotenv').config({});
 
 import 'reflect-metadata';
-import { AppDataSource } from './db';
+import {  connection } from './db';
 import { server } from './apollo';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
 const PORT = Number(process.env.PORT) || 4000
 
-AppDataSource.initialize() 
+connection()
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
 //  1. creates an Express app
 //  2. installs your ApolloServer instance as middleware

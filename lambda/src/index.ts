@@ -1,13 +1,13 @@
 require('dotenv').config({});
 
 import 'reflect-metadata';
-import { AppDataSource } from './db';
+import { AppDataSource, connection } from './db';
 import { server } from './apollo';
 import { startServerAndCreateLambdaHandler, handlers } from '@as-integrations/aws-lambda';
 
 const PORT = Number(process.env.PORT) 
 
-AppDataSource.initialize() 
+connection()
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
 //  1. creates an Express app
 //  2. installs your ApolloServer instance as middleware

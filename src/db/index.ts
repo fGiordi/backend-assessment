@@ -3,11 +3,11 @@ import User from "../entities/user.entity"
 import Task  from "../entities/tasks.entity"
 
 const POSTGRES_HOST = process.env.POSTGRES_HOST
-const POSTGRES_USER= process.env.POSTGRES_USER
+const POSTGRES_USER = process.env.POSTGRES_USER
 const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
 const POSTGRES_DB = process.env.POSTGRES_DB
 
-export const AppDataSource = new DataSource({
+export const  AppDataSource = new DataSource({
   entities: [User, Task],
   synchronize: true,
   logging: false,
@@ -19,9 +19,16 @@ export const AppDataSource = new DataSource({
   "database": POSTGRES_DB,
 })
 
-AppDataSource.initialize()
-  .then((data) => {
-    // here you can start to work with your database
+export const connection = async () => {
+  const conn = await AppDataSource.initialize()
+  try {
+    if(!conn.isInitialized){
+      await conn.initialize()
+    } 
     console.log('DB connected')
-  })
-  .catch((error) => console.log(error))
+    return conn
+    
+  } catch (error) {
+    console.error('error on DB Connect', error)
+  }
+}

@@ -7,7 +7,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"],
+    "types": ["node" ],
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true

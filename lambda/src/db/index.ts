@@ -19,9 +19,17 @@ export const AppDataSource = new DataSource({
   "database": POSTGRES_DB,
 })
 
-AppDataSource.initialize()
-  .then((data) => {
-    // here you can start to work with your database
-    console.log('DB connected')
-  })
-  .catch((error) => console.log(error))
+  export const connection = async () => {
+    const conn = await AppDataSource.initialize()
+    try {
+      if(!conn.isInitialized){
+        await conn.initialize()
+      } 
+      console.log('DB connected')
+      return conn
+      
+    } catch (error) {
+      console.error('error on DB Connect', error)
+    }
+  }
+  
